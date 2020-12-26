@@ -1,4 +1,4 @@
-let prevValue = audioVolume.value;
+let currValue = audioVolume.value;
 
 const changeValue = (player) => {
 	const valueVolume = audioVolume.value;
