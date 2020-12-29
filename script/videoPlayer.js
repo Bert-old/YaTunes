@@ -1,4 +1,6 @@
 import { addZero } from './supScript.js';
+import { toggleVolumeIcon } from './toggleVolumeIcon.js';
+// import { valueToVolume, changeValue } from './volumeController.js';
 
 export function videoPlayerInit() {
 
@@ -42,25 +44,62 @@ export function videoPlayerInit() {
 	};
 
 
+	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	const valueToVolume = (videoValue) => videoValue / 100;
+	videoPlayer.volume = valueToVolume(videoVolume.value);
+
+	let currValue = videoVolume.value;
+
 	const changeValue = () => {
 		const valueVolume = videoVolume.value;
-		videoPlayer.volume = valueVolume / 100;
+		if (videoPlayer.muted) {
+			videoPlayer.muted = false;
+		}
+		currValue = valueVolume;
+		videoPlayer.volume = valueToVolume(valueVolume);
+		// console.log(`input: ${valueVolume}, volume: ${videoPlayer.volume}`);
+
+		toggleVolumeIcon(videoVolume, videoMute);
 	};
 
 	const muteVolume = () => {
-		videoVolume.value = 0;
-		videoPlayer.volume = 0;
+		let prevValue = videoVolume.value;
+		videoPlayer.muted = !videoPlayer.muted;
+
+		if (prevValue != 0) {
+			currValue = videoPlayer.volume;
+			videoVolume.value = 0;
+			currValue = prevValue;
+			videoMute.classList.remove('fa-volume-down');
+			videoMute.classList.add('fa-volume-off');
+		} else {
+			videoVolume.value = currValue;
+			videoMute.classList.add('fa-volume-down');
+			videoMute.classList.remove('fa-volume-off');
+		}
 	};
 
 	const maxVolume = () => {
-		videoVolume.value = 100;
-		videoPlayer.volume = 1;
+		const maxValue = 100;
+		let prevValue = videoVolume.value;
+		if (videoPlayer.muted) {
+			videoPlayer.muted = false;
+		}
+		if (prevValue != maxValue) {
+			videoVolume.value = maxValue;
+			currValue = prevValue;
+		} else {
+			videoVolume.value = currValue;
+		}
+
+		videoPlayer.volume = valueToVolume(videoVolume.value);
 	};
 
 	videoMute.addEventListener('click', muteVolume);
 	volumeUp.addEventListener('click', maxVolume);
 
 
+	// !!!!!!!!!!!!!!!
 
 
 	videoPlayer.addEventListener('click', togglePlay);
@@ -116,15 +155,10 @@ export function videoPlayerInit() {
 		videoVolume.value = Math.round(videoPlayer.volume * 100);
 	});
 
-
 	// changeValue();
-
-
-
-
 	videoPlayerInit.stop = () => {
 		videoPlayer.pause();
 		toggleIcon();
 	}
-	videoPlayer.volume = 0.1;
+
 }

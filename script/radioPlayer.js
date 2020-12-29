@@ -1,3 +1,5 @@
+import { toggleVolumeIcon } from './toggleVolumeIcon.js';
+
 export function radioPlayerInit() {
 
 	const radio = document.querySelector('.radio');
@@ -10,18 +12,14 @@ export function radioPlayerInit() {
 	const radioVolume = document.querySelector('.radio-volume');
 	const radioMute = document.querySelector('.radio-mute-icon');
 
-
 	const audio = new Audio();
 	audio.type = 'audio/aac';
-
-
-
-
-	// let prevVolume = audio.volume;
-
-
-
 	radioStop.disabled = true;
+
+	const selectItem = elem => {
+		radioItem.forEach(item => item.classList.remove('select'));
+		elem.classList.add('select');
+	};
 
 	const changeIconPlay = () => {
 		if (audio.paused) {
@@ -36,11 +34,38 @@ export function radioPlayerInit() {
 	};
 
 
+	const valueToVolume = (audioValue) => radioVolume.value / 100;
+	audio.volume = valueToVolume(radioVolume.value);
 
-	const selectItem = elem => {
-		radioItem.forEach(item => item.classList.remove('select'));
-		elem.classList.add('select');
+	let currValue = radioVolume.value;
+	const muteVolume = () => {
+		let prevValue = radioVolume.value;
+		audio.muted = !audio.muted;
+		if (prevValue != 0) {
+			currValue = audio.volume;
+			radioVolume.value = 0;
+			currValue = prevValue;
+			radioMute.classList.remove('fa-volume-down');
+			radioMute.classList.add('fa-volume-off');
+		} else {
+			radioVolume.value = currValue;
+			radioMute.classList.add('fa-volume-down');
+			radioMute.classList.remove('fa-volume-off');
+		}
 	};
+	const changeValue = () => {
+		const valueVolume = radioVolume.value;
+		if (audio.muted) {
+			audio.muted = false;
+		}
+		currValue = valueVolume;
+		audio.volume = valueToVolume(valueVolume);
+		// console.log(`input: ${valueVolume}, volume: ${audio.volume}`);
+
+		toggleVolumeIcon(radioVolume, radioMute);
+	};
+
+
 
 
 	radioNavigation.addEventListener('change', event => {
@@ -71,19 +96,11 @@ export function radioPlayerInit() {
 		changeIconPlay();
 	});
 
-	radioVolume.addEventListener('input', () => {
-		audio.volume = radioVolume.value / 100;
-	});
-
-	radioMute.addEventListener('click', () => {
-		audio.muted = !audio.muted;
-	});
-
+	radioVolume.addEventListener('input', changeValue);
+	radioMute.addEventListener('click', muteVolume);
 
 	radioPlayerInit.stop = () => {
 		audio.pause();
 		changeIconPlay();
 	}
-	audio.volume = 0.1;
-	audio.muted = false;
 };

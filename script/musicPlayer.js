@@ -1,4 +1,7 @@
 import { addZero } from './supScript.js';
+import { toggleVolumeIcon } from './toggleVolumeIcon.js';
+import { maxVolume, currValue, audioVolume } from './volumeController.js';
+
 
 export function musicPlayerInit() {
 
@@ -64,8 +67,11 @@ export function musicPlayerInit() {
 
 
 	// !!!! Volume
+	const valueToVolume = (audioValue) => audioValue / 100;
+	audioPlayer.volume = valueToVolume(audioVolume.value);
 
 	let currValue = audioVolume.value;
+
 
 	const changeValue = () => {
 		const valueVolume = audioVolume.value;
@@ -75,41 +81,54 @@ export function musicPlayerInit() {
 		currValue = valueVolume;
 		audioPlayer.volume = valueToVolume(valueVolume);
 		// console.log(`input: ${valueVolume}, volume: ${audioPlayer.volume}`);
+
+		toggleVolumeIcon(audioVolume, audioMute);
 	};
+
 
 	const muteVolume = () => {
 		let prevValue = audioVolume.value;
 		audioPlayer.muted = !audioPlayer.muted;
 		if (prevValue != 0) {
+			currValue = audio.volume;
 			audioVolume.value = 0;
 			currValue = prevValue;
+			audioMute.classList.remove('fa-volume-down');
+			audioMute.classList.add('fa-volume-off');
 		} else {
 			audioVolume.value = currValue;
+			audioMute.classList.add('fa-volume-down');
+			audioMute.classList.remove('fa-volume-off');
 		}
-	}
-
-
-	const maxVolume = () => {
-		const maxValue = 100;
-		let prevValue = audioVolume.value;
-		if (audioPlayer.muted) {
-			audioPlayer.muted = false;
-		}
-		if (prevValue != maxValue) {
-			audioVolume.value = maxValue;
-			currValue = prevValue;
-		} else {
-			audioVolume.value = currValue;
-		}
-
-		audioPlayer.volume = valueToVolume(audioVolume.value);
 	};
+
+	// const maxVolume = () => {
+	// 	const maxValue = 100;
+	// 	let prevValue = audioVolume.value;
+	// 	if (audioPlayer.muted) {
+	// 		audioPlayer.muted = false;
+	// 	}
+	// 	if (prevValue != maxValue) {
+	// 		audioVolume.value = maxValue;
+	// 		currValue = prevValue;
+	// 	} else {
+	// 		audioVolume.value = currValue;
+	// 	}
+
+	// 	audioPlayer.volume = valueToVolume(audioVolume.value);
+
+	// 	console.log(audioPlayer.volume);
+	// };
+
+	maxVolume(audioVolume, audioPlayer);
+
+
+
+	// !!!! ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Volume ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 	audioMute.addEventListener('click', muteVolume);
 	volumeUp.addEventListener('click', maxVolume);
 	audioVolume.addEventListener('input', changeValue);
-
-	// !!!! ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Volume ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 
@@ -129,8 +148,6 @@ export function musicPlayerInit() {
 			const track = playList[trackIndex];
 			audioHeader.textContent = track.toUpperCase();
 		}
-
-
 
 		if (target.classList.contains('audio-button__prev')) {
 			prevTrack();
@@ -179,9 +196,6 @@ export function musicPlayerInit() {
 		audio.classList.remove('play');
 	}
 
-	const valueToVolume = (audioValue) => audioValue / 100;
-
-	audioPlayer.volume = valueToVolume(audioVolume.value);
 }
 
 
