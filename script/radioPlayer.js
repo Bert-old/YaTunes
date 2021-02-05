@@ -1,4 +1,4 @@
-import { toggleVolumeIcon } from './toggleVolumeIcon.js';
+import { muteVolume, changeValue } from './volumeController.js';
 
 export function radioPlayerInit() {
 
@@ -37,35 +37,9 @@ export function radioPlayerInit() {
 	const valueToVolume = (audioValue) => radioVolume.value / 100;
 	audio.volume = valueToVolume(radioVolume.value);
 
-	let currValue = radioVolume.value;
-	const muteVolume = () => {
-		let prevValue = radioVolume.value;
-		audio.muted = !audio.muted;
-		if (prevValue != 0) {
-			currValue = audio.volume;
-			radioVolume.value = 0;
-			currValue = prevValue;
-			radioMute.classList.remove('fa-volume-down');
-			radioMute.classList.add('fa-volume-off');
-		} else {
-			radioVolume.value = currValue;
-			radioMute.classList.add('fa-volume-down');
-			radioMute.classList.remove('fa-volume-off');
-		}
-	};
-	const changeValue = () => {
-		const valueVolume = radioVolume.value;
-		if (audio.muted) {
-			audio.muted = false;
-		}
-		currValue = valueVolume;
-		audio.volume = valueToVolume(valueVolume);
-		// console.log(`input: ${valueVolume}, volume: ${audio.volume}`);
 
-		toggleVolumeIcon(radioVolume, radioMute);
-	};
-
-
+	radioVolume.addEventListener('input', changeValue.bind(null, radioVolume, audio, radioMute));
+	radioMute.addEventListener('click', muteVolume.bind(null, radioVolume, audio, radioMute));
 
 
 	radioNavigation.addEventListener('change', event => {
@@ -95,9 +69,6 @@ export function radioPlayerInit() {
 		}
 		changeIconPlay();
 	});
-
-	radioVolume.addEventListener('input', changeValue);
-	radioMute.addEventListener('click', muteVolume);
 
 	radioPlayerInit.stop = () => {
 		audio.pause();

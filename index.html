@@ -60,9 +60,8 @@
 						<p class="video-time video-time__passed">00:00</p>
 						<input type="range" class="video-progress" min="0" max="100" step="0.1" value="0">
 						<p class="video-time video-time__total">00:00</p>
-						<span class="fa fa-volume-down video-mute-icon video-icon"></span>
-						<!-- <img class="video-mute-icon" src="./image/mute.svg" alt="mute"> -->
 
+						<span class="fa fa-volume-down video-mute-icon video-icon"></span>
 						<input type="range" class="video-volume" min="0" max="100" step="1" value="10">
 						<span class="fa fa-volume-up video-icon"></span>
 						<span class="fa fa-window-maximize video-icon video-fullscreen"></span>
@@ -94,8 +93,7 @@
 					</div>
 					<span class="audio-time audio-time__total">00:00</span>
 
-					<!-- <img class="audio-mute-icon" src="./image/mute.svg" alt="mute"> -->
-					<span class="fa fa-volume-down audio-mute-icon"></span>
+					<span class="fa fa-volume-down audio-mute-icon video-icon"></span>
 					<input type="range" class="audio-volume" min="0" max="100" step="1" value="20">
 					<span class="fa fa-volume-up audio-volume-up"></span>
 				</nav>
@@ -121,8 +119,8 @@
 										<img class="radio-img" src="radio/RTLGroove.png" alt="обложка">
 									</div>
 									<input class="radio-btn" type="radio" id="RTLGroove" name="radioStantion"
-										data-radio-stantion="http://shoutcast.rtl.it:3040/">
-									<span class="radio-name">RTL Groove</span>
+										data-radio-stantion="https://cast.radiogroup.com.ua/nrj">
+									<span class="radio-name">Energy UA</span>
 								</label>
 							</li>
 
@@ -186,11 +184,11 @@
 				</div>
 			</div>
 			<footer class="footer-fix radio-footer">
-				<!-- <img class="radio-mute-icon" src="./image/mute.svg" alt="mute"> -->
+
 				<div class="rv">
 					<button class="radio-stop fa fa-play"></button>
-					<div class="">
-						<span class="fa fa-volume-down radio-mute-icon"></span>
+					<div class="rv-container">
+						<span class="fa fa-volume-down radio-mute-icon video-icon"></span>
 						<input type="range" class="radio-volume" min="0" max="100" step="1" value="15">
 					</div>
 				</div>
